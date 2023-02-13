@@ -1,5 +1,6 @@
 package com.mysite.sbb.question;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,6 +38,21 @@ public class QuestionService {
 			throw new DataNotFoundException("요청한 파일을 찾지 못했습니다.");
 		}
 	}
+	
+	
+	public void create(String subject, String content) {
+		//Question 객체를 생성 후 Setter 주입
+		Question q = new Question();
+		q.setSubject(subject);
+		q.setContent(content);
+		q.setCreateDate(LocalDateTime.now());
+		
+		//Repository의 save ()메소드에 Question 객체 저장
+		this.questionRepository.save(q);	//DB에 insert 
+		
+	}
+	
+	
 	
 	
 }

@@ -87,6 +87,23 @@ Service 클래스 : 비즈니스 로직을 처리함.
 	- 보안을 강화할 수 있다.
 	
 Client ===> Controller ===> Service (비즈니스 로직처리, dto, DAO ) ===> DAO => DB
+
+=================================================================
+
+// Spring Framework를 사용한 폼 태그 내의 유효성 검사
+
+1. Spring Framework를 사용한 폼 태그 내의 유효성 검사
+
+1. 라이브러리 등록 :
+	build.gradle에 등록
+           //Spring에서 제공해주는 유효성 검사 라이브러리 : form에서 빈 값이나 글자수 제한
+           implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+2.  유효성 검사 클래스를 생성 (QuestionFrom.java) , @NotEmpty (message=”오류메시지”)
+	@Getter
+	@Setter
+
+	유효성 검사 필드 : subject, content
 		
 		
 		
