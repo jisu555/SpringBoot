@@ -38,8 +38,13 @@
 				
 				<td th:text="${paging.getTotalElements-(paging.number*paging.size)-loop.index}"> 번호 </td>
 				
-				<td><a th:href="@{|/question/detail/${question.id}|}">[[${question.subject}]]
-				</a></td>
+				<td>
+					<a th:href="@{|/question/detail/${question.id}|}">[[${question.subject}]]</a>
+					<span class="text-danger small ms-2"
+						th:if="${#lists.size(question.answerList)>0}"
+						th:text="${#lists.size(question.answerList)}">
+					</span>
+				</td>
 				<td>[[ ${#temporals.format(question.createDate,
 					'yyyy-MM-HH:mm')}]]</td>
 			</tr>
@@ -60,12 +65,14 @@
 			</li>
 			
 			<!-- 첫 페이지부터 마지막 페이지까지 루프를 돌려서 출력 -->
+			<!-- th:if="${page >= paging.number-5 and page <= paging.number+5}" -->
+			
 			<li th:each="page : ${#numbers.sequence(0,paging.totalPages-1)}"
-				th:if="${page >= paging.number-5 and page <= paging.number+5}"
+				th:if="${5*(paging.number/5) <= page and (5*((paging.number/5)+1)-1) >= page }"
 				th:classappend="${page==paging.number}? 'active'" class="page-item"
 			>
 				
-				<a th:text=${page} class="page-link" th:href="@{|?page=${page}|}"></a>
+				<a th:text=${page+1} class="page-link" th:href="@{|?page=${page}|}"></a>
 			</li>
 			
 			<!-- 다음을 처리하는 블락 -->
