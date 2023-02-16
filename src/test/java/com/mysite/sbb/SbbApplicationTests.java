@@ -47,7 +47,6 @@ class SbbApplicationTests {
 	
 	
 	
-	
 	/* question 테이블에 for문을 사용해서 더미값 1000개 insert 
 	@Test
 	public void insert1000() {
