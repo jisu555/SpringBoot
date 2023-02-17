@@ -9,11 +9,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.mysite.sbb.DataNotFoundException;
+import com.mysite.sbb.answer.Answer;
 import com.mysite.sbb.user.SiteUser;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.JoinType;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor	// DI 
@@ -28,7 +36,7 @@ public class QuestionService {
 //	}
 	
 	//Controller에서 getList메서드 호출 시 출력할 page 번호를 매개변수로 받음. : 0,1,2,3...
-	public Page<Question> getList(int page) {
+	public Page<Question> getList(int page, String kw) {
 		
 		//최신글을 먼저 출력하기, 날짜 컬럼(createDate)을 desc해서 출력
 		List<Sort.Order> sorts = new ArrayList();
@@ -37,7 +45,10 @@ public class QuestionService {
 		//Pageable 객체에 2개의 값을 담아서 매개변수로 던짐  ,10<== 출력할 레코드 수
 		Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
 		
-		return this.questionRepository.findAll(pageable);
+		//Query 말고 자바코드를 할 때
+		//Specification<Question> spec = search(kw);
+		
+		return this.questionRepository.findAllByKeyword(kw, pageable);
 	}
 	
 	
@@ -87,5 +98,28 @@ public class QuestionService {
 		question.getVoter().add(siteUser);
 		this.questionRepository.save(question);
 	}
+	
+	
+	private Specification<Question> search(String kw) {
+		return new Specification<>() {
+			private static final long serialVersionUID = 1L;
+		
+		@Override
+		public Predicate toPredicate(Root<Question> q, CriteriaQuery<?> query, 
+				CriteriaBuilder cb) {
+			query.distinct(true);		
+			Join<Question, SiteUser> u1 = q.join("author", JoinType.LEFT);
+			Join<Question, Answer> a = q.join("answerList", JoinType.LEFT);
+			Join<Answer, SiteUser> u2 = a.join("author", JoinType.LEFT);
+			return cb.or(cb.like(q.get("subject"),"%"+ kw + "%"),
+					cb.like(q.get("content"), "%" + kw + "%"),
+					cb.like(u1.get("username"),"%"+kw+"%"),
+					cb.like(a.get("content"), "%"+kw+"%"),
+					cb.like(u2.get("username"), "%" + kw + "%"));
+		}
+		};
+	}
+	
+	
 	
 }

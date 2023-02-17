@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelExtensionsKt;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -73,14 +74,16 @@ public class QuestionController {
 	// 2월 14일 페이징 처리를 위해 수정됨
 	// http://localhost:9696/question/list/?page=0
 	@GetMapping("/question/list")
-	public String list(Model model, @RequestParam (value="page", defaultValue="0") int page) {
+	public String list(Model model, @RequestParam (value="page", defaultValue="0") int page,
+			@RequestParam(value = "kw", defaultValue = "") String kw) {
 		
 		//비즈니스 로직 처리 : 
 		Page<Question> paging =	
-			this.questionService.getList(page);
+			this.questionService.getList(page, kw);
 		
 		//model 객체에 결과로 받은 paging객체를 client로 전송
 		model.addAttribute("paging", paging);
+		model.addAttribute("kw", kw);
 		
 		return "question_list";
 		
@@ -107,7 +110,8 @@ public class QuestionController {
 		return "question_form";
 	}
 	
-	@PreAuthorize("isAuthenticated()")
+	//2월 16일 : Principal principal 추가됨
+	@PreAuthorize("isAuthenticated()")	//로그인 시에만 접근 가능하도록 설정
 	@PostMapping("/question/create")
 	public String questionCreate(
 			 //@RequestParam String subject, @RequestParam String content
@@ -116,10 +120,16 @@ public class QuestionController {
 				  if(bindingResult.hasErrors()) {	//subject, content가 비어있을 떄는 
 					  return "question_form";
 				  }
+				  
+			//현재 로그온한 사용자정보를 확인해보기
+			System.out.println("현재 로그온한 사용자 정보 : " + principal);
 	
+	//2월 16일 추가 항목 :			  
 	SiteUser siteUser = this.userService.getUser(principal.getName());
 		//로직 작성 부분 (Service에서 로직을 만들어서 작동)
 		//this.questionService.create(subject, content);
+	
+	//2월 16일 추가 항목 : 
 	this.questionService.create(questionForm.getSubject(), questionForm.getContent(), siteUser);
 				  
 		//값을 DB에 저장 후 List페이지로 리다이렉트 (질문 목록으로 이동)
