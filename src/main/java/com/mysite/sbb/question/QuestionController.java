@@ -104,6 +104,8 @@ public class QuestionController {
 		return "question_detail";	// template : question_detail.html
 	}
 	
+	
+	
 	@PreAuthorize("isAuthenticated()")
 	@GetMapping("/question/create")
 	public String questionCreate(QuestionForm questionForm) {
@@ -124,6 +126,8 @@ public class QuestionController {
 			//현재 로그온한 사용자정보를 확인해보기
 			System.out.println("현재 로그온한 사용자 정보 : " + principal);
 	
+			
+			
 	//2월 16일 추가 항목 :			  
 	SiteUser siteUser = this.userService.getUser(principal.getName());
 		//로직 작성 부분 (Service에서 로직을 만들어서 작동)

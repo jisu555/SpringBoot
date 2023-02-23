@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.mysite'
-version = '0.0.1-SNAPSHOT'
+version = '0.0.3-SNAPSHOT'
 sourceCompatibility = '17'
 
 repositories {
@@ -20,7 +20,8 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	//lombok 라이브러리 등록 
 	compileOnly 'org.projectlombok:lombok'			//컴파일 단계에서만 필요한 경우에 사용됨
-	annotationProcessor 'org.projectlomok:lombok'	//컴파일 단계에서 어노테이션을 분석 처리함 
+//	annotationProcessor 'org.projectlomok:lombok'	//컴파일 단계에서 어노테이션을 분석 처리함 
+annotationProcessor 'org.projectlombok:lombok'
 	//H2 라이브러리
 	runtimeOnly 'com.h2database:h2'		//실행시에만 작동, 테스트 환경
 	//JPA라이브러리
@@ -38,8 +39,14 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1.RELEASE'
     
-    //마크다운
+    //마크다운 라이브러리 설치 (2월 17일)
     implementation 'org.commonmark:commonmark:0.21.0'
+    
+    //Oracle 라이브러리
+    implementation 'com.oracle.database.jdbc:ojdbc11'
+    
+    //JDBC
+    implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     
     
 }

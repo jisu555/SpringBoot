@@ -34,7 +34,8 @@ public class Question {
 	@Column(length =200)     //200자까지 
 	private String subject;
 	
-	@Column(columnDefinition = "TEXT")
+	//@Column(columnDefinition = "TEXT")
+	@Column(length = 4000)
 	private String content;
 	
 	private LocalDateTime createDate;   //create_date : 
@@ -57,8 +58,15 @@ public class Question {
 	@ManyToOne		//Foreign Key : site_user 테이블의 Primary key 참조
 	private SiteUser author;
 	
+	
+	
 	@ManyToMany
-	Set<SiteUser> voter;
+	Set<SiteUser> voter;	//한명의 사용자가 여러 질문에 투표할 수 있다.
+							// 하나의 질문에 여러명의 사용자가 투표할 수 있다. 1번만 투표 가능하도록 set
+	
+	//List : 방의 번호(Index)를 가지고 중복된 값을 저장할 수 있다.
+	//Set : 자료형은 중복된 값을 넣을 수 없는 자료형
+		// Set은 방번호를 가지지 않는다.
 	
 	
 	

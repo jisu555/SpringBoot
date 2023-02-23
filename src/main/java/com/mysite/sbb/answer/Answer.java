@@ -25,7 +25,8 @@ public class Answer {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;		//Primary Key, 자동 중가 (1,1)
 	
-	@Column(columnDefinition = "TEXT")
+	//@Column(columnDefinition = "TEXT")
+	@Column(length = 4000)
 	private String content;
 	
 	private LocalDateTime createDate;  //create_date : DB에 저장된 컬럼명
